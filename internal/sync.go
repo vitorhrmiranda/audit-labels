@@ -16,7 +16,12 @@ func Perform(items []Input) []PDF {
 	for row, item := range items {
 		p.Update(row + 1)
 
-		pdf := perform(item)
+		pdf, err := perform(item)
+		if err != nil {
+			log.Printf("ERROR: id=%s, %s", item.ID(), err)
+			continue
+		}
+
 		pdfs = append(pdfs, *pdf)
 	}
 

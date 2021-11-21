@@ -17,3 +17,9 @@ sync: build
 
 async: build
 	./audit -async=true
+
+db:
+	sqlite3 audit.db "create table pdf (id text primary key, code text, error integer, plain_text text);"
+
+setup: db
+	cp input.json.sample input.json

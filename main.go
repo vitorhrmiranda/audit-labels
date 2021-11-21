@@ -11,7 +11,7 @@ import (
 	"github.com/vitorhrmiranda/audit/persistence"
 )
 
-//go:embed 2021-11-20T00_20_47.json
+//go:embed input.json
 var file []byte
 
 func main() {

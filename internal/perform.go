@@ -3,7 +3,6 @@ package internal
 import (
 	"bytes"
 	"io"
-	"log"
 	"net/http"
 	"regexp"
 
@@ -34,23 +33,23 @@ func download(url string, w io.Writer) error {
 	return err
 }
 
-func perform(item Input) *PDF {
+func perform(item Input) (*PDF, error) {
 	pdf := new(PDF)
 
 	b := bytes.Buffer{}
 	if err := download(item.URL(), &b); err != nil {
-		log.Printf("ERROR: id=%s, %s", item.ID(), err)
-		return pdf
+		return pdf, err
 	}
 
 	res, err := docconv.Convert(&b, "application/pdf", true)
 	if err != nil {
-		log.Printf("ERROR: id=%s, %s", item.ID(), err)
-		return pdf
+		return pdf, err
 	}
 
-	code := regexp.MustCompile(`#([A-Z]|[0-9])+`).Find([]byte(res.Body))
-	orderCode := string(code[1:])
+	var orderCode string
+	if code := regexp.MustCompile(`#([A-Z]|[0-9])+`).Find([]byte(res.Body)); len(code) > 1 {
+		orderCode = string(code[1:])
+	}
 
 	equal := 0
 	if orderCode != item.Code() {
@@ -62,5 +61,5 @@ func perform(item Input) *PDF {
 		Code:      orderCode,
 		PlainText: res.Body,
 		Error:     equal,
-	}
+	}, nil
 }
