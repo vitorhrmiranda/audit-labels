@@ -3,6 +3,7 @@ package main
 import (
 	_ "embed"
 	"encoding/json"
+	"flag"
 	"log"
 
 	"github.com/vitorhrmiranda/audit/entities"
@@ -14,19 +15,25 @@ import (
 var file []byte
 
 func main() {
+	runAsync := flag.Bool("async", true, "Runs async requests")
+	flag.Parse()
+
+	if *runAsync {
+		async()
+		return
+	}
+
 	sync()
 }
 
 func sync() {
-	// 2021/11/20 18:22:37 START
-	// 2021/11/20 18:28:06 FINISH
 	var items []entities.Input
 	if err := json.Unmarshal(file, &items); err != nil {
 		log.Fatal(err)
 	}
 
 	var i []internal.Input
-	for j := 0; j < 1000; j++ {
+	for j := 0; j < len(items); j++ {
 		i = append(i, items[j])
 	}
 
@@ -39,5 +46,22 @@ func sync() {
 }
 
 func async() {
+	var items []entities.Input
+	if err := json.Unmarshal(file, &items); err != nil {
+		log.Fatal(err)
+	}
 
+	var i []internal.Input
+	for j := 0; j < len(items); j++ {
+		i = append(i, items[j])
+	}
+
+	pdfs := internal.PerformAsync(i)
+	db := persistence.New()
+
+	for pdf := range pdfs {
+		if err := db.Table("pdf").Create(pdf).Error; err != nil {
+			log.Fatal(err)
+		}
+	}
 }
