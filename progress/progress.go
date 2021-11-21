@@ -33,8 +33,9 @@ func (p *percent) Update(current int) {
 func (p percent) String() string {
 	elapsedTime := time.Since(p.started)
 	timeLeft := time.Duration(p.total * int(elapsedTime) / p.current)
+
 	return fmt.Sprintf(
-		"Progress: \033[32m%.1f%%\033[0m\tElapsed: \033[34m%v\033[0m\tLeft: \033[31m%v\033[0m",
+		"Progress: \033[32m%.1f%%\033[0m\t Elapsed: \033[34m%v\033[0m\t Left: \033[31m%v\033[0m",
 		p.Percent(),
 		elapsedTime.Round(time.Second),
 		timeLeft.Round(time.Second),

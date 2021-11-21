@@ -40,6 +40,7 @@ func sync(dbName string) {
 		i = append(i, items[j])
 	}
 
+	log.Printf("COUNT: %d", len(i))
 	pdf := internal.Perform(i)
 	db := persistence.New(dbName)
 
@@ -60,6 +61,7 @@ func async(dbName string) {
 		i = append(i, items[j])
 	}
 
+	log.Printf("COUNT: %d", len(i))
 	pdfs := internal.PerformAsync(i)
 	db := persistence.New(dbName)
 

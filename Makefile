@@ -1,4 +1,4 @@
-.PHONY: perform
+default: build async
 
 perform:
 	go run main.go -async=true
