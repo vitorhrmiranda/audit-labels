@@ -11,3 +11,9 @@ clear:
 
 build:
 	go build -o audit main.go
+
+sync: build
+	./audit -async=false
+
+async: build
+	./audit -async=true

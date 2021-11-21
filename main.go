@@ -11,22 +11,25 @@ import (
 	"github.com/vitorhrmiranda/audit/persistence"
 )
 
-//go:embed 2021-11-20T21_12_15.json
+//go:embed 2021-11-20T00_20_47.json
 var file []byte
 
 func main() {
 	runAsync := flag.Bool("async", true, "Runs async requests")
+	dbName := flag.String("db", "audit.db", "Database name")
 	flag.Parse()
 
 	if *runAsync {
-		async()
+		async(*dbName)
 		return
 	}
 
-	sync()
+	sync(*dbName)
 }
 
-func sync() {
+func sync(dbName string) {
+	log.Println("Starting sync...")
+
 	var items []entities.Input
 	if err := json.Unmarshal(file, &items); err != nil {
 		log.Fatal(err)
@@ -38,14 +41,15 @@ func sync() {
 	}
 
 	pdf := internal.Perform(i)
-	db := persistence.New()
+	db := persistence.New(dbName)
 
 	if err := db.Table("pdf").Create(pdf).Error; err != nil {
-		log.Fatal(err)
+		log.Fatalf("DBERROR: %s", err)
 	}
 }
 
-func async() {
+func async(dbName string) {
+	log.Println("Starting async...")
 	var items []entities.Input
 	if err := json.Unmarshal(file, &items); err != nil {
 		log.Fatal(err)
@@ -57,11 +61,11 @@ func async() {
 	}
 
 	pdfs := internal.PerformAsync(i)
-	db := persistence.New()
+	db := persistence.New(dbName)
 
 	for pdf := range pdfs {
 		if err := db.Table("pdf").Create(pdf).Error; err != nil {
-			log.Fatal(err)
+			log.Fatalf("DBERROR: %s", err)
 		}
 	}
 }

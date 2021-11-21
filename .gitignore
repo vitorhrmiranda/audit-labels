@@ -1,3 +1,6 @@
 *.json
 *.log
+*.db
 audit
+
+!audit.db

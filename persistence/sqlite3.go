@@ -5,8 +5,8 @@ import (
 	"gorm.io/gorm"
 )
 
-func New() *gorm.DB {
-	db, err := gorm.Open(sqlite.Open("audit.db"), &gorm.Config{})
+func New(name string) *gorm.DB {
+	db, err := gorm.Open(sqlite.Open(name), &gorm.Config{})
 	if err != nil {
 		panic(err)
 	}

@@ -1,6 +1,9 @@
 package progress
 
-import "fmt"
+import (
+	"fmt"
+	"log"
+)
 
 type percent struct {
 	current, total int
@@ -21,7 +24,7 @@ func (p *percent) Update(current int) {
 	if int(c.Percent()) >= int(p.Percent()) {
 		return
 	}
-	fmt.Printf("\r%s", p)
+	log.Printf("\r%s", p)
 }
 
 func (p percent) String() string {

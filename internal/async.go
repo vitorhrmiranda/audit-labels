@@ -13,7 +13,7 @@ func PerformAsync(items []Input) <-chan PDF {
 	go func() {
 		defer close(pdfs)
 
-		guard := make(chan struct{}, 100)
+		guard := make(chan struct{}, 25)
 		var wg sync.WaitGroup
 
 		log.Print("START")

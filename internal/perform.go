@@ -39,13 +39,13 @@ func perform(item Input) *PDF {
 
 	b := bytes.Buffer{}
 	if err := download(item.URL(), &b); err != nil {
-		log.Println(err)
+		log.Printf("ERROR: id=%s, %s", item.ID(), err)
 		return pdf
 	}
 
 	res, err := docconv.Convert(&b, "application/pdf", true)
 	if err != nil {
-		log.Println(err)
+		log.Printf("ERROR: id=%s, %s", item.ID(), err)
 		return pdf
 	}
 
