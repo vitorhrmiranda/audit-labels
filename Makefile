@@ -13,10 +13,10 @@ build:
 	go build -o audit main.go
 
 sync: build
-	./audit -async=false
+	./audit -async=false 2> errors.log
 
 async: build
-	./audit -async=true
+	./audit -async=true 2> errors.log
 
 db:
 	sqlite3 audit.db "create table pdf (id text primary key, code text, error integer, plain_text text);"

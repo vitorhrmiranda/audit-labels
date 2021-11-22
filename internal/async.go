@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"math"
+	"os"
 	"sync"
 	"time"
 
@@ -35,7 +36,7 @@ func PerformAsync(items []Input) <-chan PDF {
 
 				pdf, err := perform(item)
 				for i := 1; err != nil && i < 5; i++ {
-					log.Printf("ERROR: %s, retry=%d, id=%s", err, i, item.ID())
+					log.New(os.Stderr, "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile).Printf("%s, retry=%d, id=%s", err, i, item.ID())
 					time.Sleep(time.Duration(math.Pow(2, float64(i))) * time.Second)
 					pdf, err = perform(item)
 				}

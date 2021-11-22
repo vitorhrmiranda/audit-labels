@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"flag"
 	"log"
+	"os"
 
 	"github.com/vitorhrmiranda/audit/entities"
 	"github.com/vitorhrmiranda/audit/internal"
@@ -45,7 +46,7 @@ func sync(dbName string) {
 	db := persistence.New(dbName)
 
 	if err := db.Table("pdf").Create(pdf).Error; err != nil {
-		log.Fatalf("DBERROR: %s", err)
+		log.New(os.Stderr, "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile).Println(err)
 	}
 }
 
@@ -67,7 +68,7 @@ func async(dbName string) {
 
 	for pdf := range pdfs {
 		if err := db.Table("pdf").Create(pdf).Error; err != nil {
-			log.Fatalf("DBERROR: %s", err)
+			log.New(os.Stderr, "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile).Println(err)
 		}
 	}
 }
