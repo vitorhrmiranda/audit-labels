@@ -68,7 +68,7 @@ func async(dbName string) {
 
 	for pdf := range pdfs {
 		if err := db.Table("pdf").Create(pdf).Error; err != nil {
-			log.New(os.Stderr, "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile).Println(err)
+			log.New(os.Stderr, "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile).Printf("ID: %s, Order: %s, %v", pdf.ID, pdf.Code, err)
 		}
 	}
 }
