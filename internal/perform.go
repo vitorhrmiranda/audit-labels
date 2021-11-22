@@ -47,7 +47,7 @@ func perform(item Input) (*PDF, error) {
 	}
 
 	var orderCode string
-	if code := regexp.MustCompile(`#([A-Z]|[0-9])+`).Find([]byte(res.Body)); len(code) > 1 {
+	if code := regexp.MustCompile(`#([A-Z]|[0-9]){16}`).Find([]byte(res.Body)); len(code) > 1 {
 		orderCode = string(code[1:])
 	}
 
