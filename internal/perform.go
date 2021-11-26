@@ -2,6 +2,7 @@ package internal
 
 import (
 	"bytes"
+	"encoding/json"
 	"io"
 	"net/http"
 	"regexp"
@@ -18,8 +19,17 @@ type Input interface {
 type PDF struct {
 	ID        string `json:"id" gorm:"text"`
 	Code      string `json:"code" gorm:"text"`
-	PlainText string `json:"plain_text" gorm:"text"`
+	PlainText string `json:"-" gorm:"text"`
 	Error     int    `json:"error"`
+	Phone     string `json:"phone"`
+	Order     string `json:"order"`
+	Seller    string `json:"seller"`
+	Buyer     string `json:"buyer"`
+}
+
+func (p PDF) String() string {
+	b, _ := json.Marshal(p)
+	return string(b)
 }
 
 func download(url string, w io.Writer) error {
